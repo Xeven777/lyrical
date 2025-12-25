@@ -125,7 +125,7 @@ export const StyleTab = React.memo(
                 variant={settings.fontFamily === f ? "default" : "outline"}
                 onClick={() => handleFontFamilyChange(f)}
                 className="text-xs text-left justify-start h-auto py-2"
-                style={{ fontFamily: f }}
+                style={{ fontFamily: `'${f}', sans-serif` }}
               >
                 {f}
               </Button>

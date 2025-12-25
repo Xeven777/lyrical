@@ -6,13 +6,15 @@ import { GeminiLyricResponse } from "../types";
 export const fetchSongDetails = async (
   query: string,
 ): Promise<GeminiLyricResponse | null> => {
+  "use cache";
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
 
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: `Search for song details and full lyrics for: "${query}". Provide the response in valid JSON format.`,
+      contents: `Search for song details and full lyrics for: "${query}". Provide the response in valid JSON format. try to find in https://www.azlyrics.com/ or https://genius.com/ if possible.`,
       config: {
+        tools: [{ urlContext: {} }, { googleSearch: {} }],
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
@@ -26,7 +28,7 @@ export const fetchSongDetails = async (
                 "The full lyrics of the song, separated by newlines.",
             },
           },
-          required: ["title", "artist", "album", "lyrics"],
+          required: ["title", "artist", "lyrics"],
         },
       },
     });

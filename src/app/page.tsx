@@ -26,7 +26,7 @@ import {
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"content" | "bg" | "style">(
-    "content"
+    "content",
   );
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -83,10 +83,12 @@ const App: React.FC = () => {
           .split("\n")
           .filter((line: string) => line.trim().length > 0);
         setSong({
-          ...result,
+          title: result.title,
+          artist: result.artist,
+          album: result.album ?? "Unknown Album",
           lyrics: lyricsArray,
           albumArtUrl: `https://picsum.photos/seed/${encodeURIComponent(
-            result.album
+            result.album ?? "Unknown Album",
           )}/400/400`,
         });
         setLyricsText(result.lyrics);
@@ -95,7 +97,7 @@ const App: React.FC = () => {
       }
       setIsLoading(false);
     },
-    [query]
+    [query],
   );
 
   const handleManualCreate = useCallback(() => {
@@ -115,9 +117,27 @@ const App: React.FC = () => {
   const downloadImage = useCallback(async () => {
     if (previewRef.current === null) return;
     try {
+      // Wait for fonts to load
+      if (document.fonts) {
+        await document.fonts.ready;
+      }
+
+      // Small delay to ensure everything is rendered
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       const dataUrl = await htmlToImage.toPng(previewRef.current, {
         quality: 1,
         pixelRatio: 2.5,
+        cacheBust: true,
+        fontEmbedCSS: "",
+        skipFonts: false,
+        filter: (node) => {
+          // Filter out any problematic nodes if needed
+          return true;
+        },
+        style: {
+          fontFamily: settings.fontFamily || "Inter",
+        },
       });
       const link = document.createElement("a");
       link.download = `LyricVibe-${song?.title || "Cover"}.png`;
@@ -125,8 +145,24 @@ const App: React.FC = () => {
       link.click();
     } catch (err) {
       console.error("Download failed", err);
+      // Try alternative method without font embedding
+      try {
+        const dataUrl = await htmlToImage.toPng(previewRef.current, {
+          quality: 1,
+          pixelRatio: 2,
+          cacheBust: true,
+          skipFonts: true,
+        });
+        const link = document.createElement("a");
+        link.download = `LyricVibe-${song?.title || "Cover"}.png`;
+        link.href = dataUrl;
+        link.click();
+      } catch (fallbackErr) {
+        console.error("Fallback download also failed", fallbackErr);
+        alert("Failed to download image. Please try again.");
+      }
     }
-  }, [song?.title]);
+  }, [song?.title, settings.fontFamily]);
 
   const handleSongChange = useCallback((updatedSong: SongData) => {
     setSong(updatedSong);

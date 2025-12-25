@@ -132,7 +132,7 @@ export const ContentTab = React.memo(
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Lyric Selection
+              Lyric Selection ({selectedLyricIndices.length})
             </h3>
             <Button
               onClick={() => onEditingChange(!isEditingLyrics)}
