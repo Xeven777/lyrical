@@ -6,8 +6,8 @@ export interface SongData {
   albumArtUrl?: string;
 }
 
-export type BgType = 'image' | 'color' | 'gradient';
-export type VerticalAlign = 'top' | 'center' | 'bottom';
+export type BgType = "image" | "color" | "gradient";
+export type VerticalAlign = "top" | "center" | "bottom";
 
 export interface CardSettings {
   // Background
@@ -17,7 +17,7 @@ export interface CardSettings {
   gradientColor1: string;
   gradientColor2: string;
   gradientAngle: number;
-  
+
   // Image Filters
   bgBlur: number;
   bgBrightness: number;
@@ -30,14 +30,14 @@ export interface CardSettings {
   // Typography - General
   fontFamily: string;
   fontSize: number;
-  textAlign: 'left' | 'center' | 'right';
+  textAlign: "left" | "center" | "right";
   textColor: string;
   textOpacity: number;
-  fontWeight: 'normal' | 'bold' | 'extrabold';
-  fontStyle: 'normal' | 'italic';
+  fontWeight: "normal" | "bold" | "extrabold";
+  fontStyle: "normal" | "italic";
   letterSpacing: number;
   lineHeight: number;
-  
+
   // Metadata Specific Styling
   titleColor: string;
   titleOpacity: number;
@@ -48,7 +48,7 @@ export interface CardSettings {
   verticalAlign: VerticalAlign;
   showAlbumArt: boolean;
   borderRadius: number;
-  
+
   // Data
   selectedLyricIndices: number[];
 }

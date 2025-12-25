@@ -1,5 +1,5 @@
 import { CardSettings, SongData } from "@/types";
-import React from "react";
+import React, { useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 interface LyricCardProps {
@@ -8,22 +8,29 @@ interface LyricCardProps {
   previewRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export const LyricCard: React.FC<LyricCardProps> = ({
+const LyricCardComponent: React.FC<LyricCardProps> = ({
   song,
   settings,
   previewRef,
 }) => {
-  const selectedLyrics =
-    song && settings.selectedLyricIndices.length > 0
-      ? settings.selectedLyricIndices.map((i) => song.lyrics[i]).filter(Boolean)
-      : ["I been an OG since I was younger", "Everything I do is elite"];
+  const selectedLyrics = useMemo(
+    () =>
+      song && settings.selectedLyricIndices.length > 0
+        ? settings.selectedLyricIndices
+            .map((i) => song.lyrics[i])
+            .filter(Boolean)
+        : ["I been an OG since I was younger", "Everything I do is elite"],
+    [song, settings.selectedLyricIndices],
+  );
 
-  const artist = song?.artist || "Artist Name";
-  const title = song?.title || "Song Title";
-  const albumArt =
-    song?.albumArtUrl || "https://picsum.photos/seed/music/400/400";
+  const artist = useMemo(() => song?.artist || "Artist Name", [song?.artist]);
+  const title = useMemo(() => song?.title || "Song Title", [song?.title]);
+  const albumArt = useMemo(
+    () => song?.albumArtUrl || "https://picsum.photos/seed/music/400/400",
+    [song?.albumArtUrl],
+  );
 
-  const getBackgroundStyle = () => {
+  const getBackgroundStyle = useMemo(() => {
     if (settings.bgType === "color") {
       return { backgroundColor: settings.backgroundColor };
     }
@@ -39,20 +46,24 @@ export const LyricCard: React.FC<LyricCardProps> = ({
       backgroundImage: `url(${bgImage})`,
       filter: `blur(${settings.bgBlur}px) brightness(${settings.bgBrightness}%) grayscale(${settings.bgGrayscale}%)`,
     };
-  };
+  }, [settings]);
 
-  const verticalAlignClass = {
-    top: "justify-start",
-    center: "justify-center",
-    bottom: "justify-end",
-  }[settings.verticalAlign];
+  const verticalAlignClass = useMemo(
+    () =>
+      ({
+        top: "justify-start",
+        center: "justify-center",
+        bottom: "justify-end",
+      })[settings.verticalAlign],
+    [settings.verticalAlign],
+  );
 
   return (
     <div
       ref={previewRef}
       className={cn(
         "relative w-full aspect-4/5 max-w-125 overflow-hidden shadow-2xl bg-card group select-none flex flex-col",
-        verticalAlignClass
+        verticalAlignClass,
       )}
       style={{
         borderRadius: `${settings.borderRadius}px`,
@@ -63,9 +74,9 @@ export const LyricCard: React.FC<LyricCardProps> = ({
         <div
           className={cn(
             "absolute inset-0 bg-cover bg-center transition-all duration-300",
-            settings.bgType === "image" && "scale-105"
+            settings.bgType === "image" && "scale-105",
           )}
-          style={getBackgroundStyle()}
+          style={getBackgroundStyle}
         />
       </div>
 
@@ -74,7 +85,7 @@ export const LyricCard: React.FC<LyricCardProps> = ({
           "absolute inset-0 bg-linear-to-t to-transparent",
           settings.overlayColor === "white"
             ? "from-background/90 via-background/40"
-            : "from-card/90 via-card/40"
+            : "from-card/90 via-card/40",
         )}
         style={{ opacity: settings.overlayOpacity }}
       />
@@ -85,7 +96,7 @@ export const LyricCard: React.FC<LyricCardProps> = ({
             "w-6 h-6 rounded-full flex items-center justify-center backdrop-blur-sm",
             settings.overlayColor === "white"
               ? "bg-foreground/10"
-              : "bg-background/20"
+              : "bg-background/20",
           )}
         >
           <span
@@ -93,7 +104,7 @@ export const LyricCard: React.FC<LyricCardProps> = ({
               "text-[10px] font-bold",
               settings.overlayColor === "white"
                 ? "text-foreground"
-                : "text-background"
+                : "text-background",
             )}
           >
             L
@@ -104,7 +115,7 @@ export const LyricCard: React.FC<LyricCardProps> = ({
             "text-xs font-bold tracking-widest uppercase",
             settings.overlayColor === "white"
               ? "text-foreground/80"
-              : "text-background/80"
+              : "text-background/80",
           )}
         >
           LyricVibe
@@ -114,7 +125,7 @@ export const LyricCard: React.FC<LyricCardProps> = ({
       <div
         className={cn(
           "relative z-10 p-8 flex flex-col gap-6 w-full",
-          settings.verticalAlign === "top" && "pt-16"
+          settings.verticalAlign === "top" && "pt-16",
         )}
       >
         <div className="flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -158,8 +169,8 @@ export const LyricCard: React.FC<LyricCardProps> = ({
               settings.fontWeight === "extrabold"
                 ? 800
                 : settings.fontWeight === "bold"
-                ? 700
-                : 400,
+                  ? 700
+                  : 400,
             fontStyle: settings.fontStyle,
             letterSpacing: `${settings.letterSpacing}em`,
             lineHeight: settings.lineHeight,
@@ -184,3 +195,5 @@ export const LyricCard: React.FC<LyricCardProps> = ({
     </div>
   );
 };
+
+export const LyricCard = React.memo(LyricCardComponent);
