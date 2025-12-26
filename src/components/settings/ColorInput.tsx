@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "@/components/ui/input";
+import { ColorPicker } from "@/components/ui/color-picker";
 import { Label } from "@/components/ui/label";
 
 interface ColorInputProps {
@@ -17,25 +17,16 @@ export const ColorInput = React.memo(
           <Label className="text-xs text-muted-foreground">{label}</Label>
         )}
         <div className="flex gap-2 items-center">
-          <input
-            type="color"
+          <ColorPicker
             value={value}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={onChange}
             aria-label={label || "Color picker"}
-            className="w-12 h-12 rounded bg-transparent cursor-pointer"
+            className="size-12"
           />
-          {showInput && (
-            <Input
-              type="text"
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
-              className="flex-1 font-mono"
-            />
-          )}
         </div>
       </div>
     );
-  },
+  }
 );
 
 ColorInput.displayName = "ColorInput";

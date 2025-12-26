@@ -31,21 +31,21 @@ export const ContentTab = React.memo(
       (title: string) => {
         if (song) onSongChange({ ...song, title });
       },
-      [song, onSongChange],
+      [song, onSongChange]
     );
 
     const handleArtistChange = useCallback(
       (artist: string) => {
         if (song) onSongChange({ ...song, artist });
       },
-      [song, onSongChange],
+      [song, onSongChange]
     );
 
     const handleAlbumChange = useCallback(
       (album: string) => {
         if (song) onSongChange({ ...song, album });
       },
-      [song, onSongChange],
+      [song, onSongChange]
     );
 
     const handleAlbumArtUpload = useCallback(
@@ -62,7 +62,7 @@ export const ContentTab = React.memo(
           reader.readAsDataURL(file);
         }
       },
-      [song, onSongChange],
+      [song, onSongChange]
     );
 
     const handleLyricsChange = useCallback(
@@ -73,7 +73,7 @@ export const ContentTab = React.memo(
           onSongChange({ ...song, lyrics });
         }
       },
-      [song, onSongChange, onLyricsTextChange],
+      [song, onSongChange, onLyricsTextChange]
     );
 
     const toggleLyricSelection = useCallback(
@@ -83,7 +83,7 @@ export const ContentTab = React.memo(
           : [...selectedLyricIndices, idx].sort((a, b) => a - b);
         onSelectedIndicesChange(newIndices);
       },
-      [selectedLyricIndices, onSelectedIndicesChange],
+      [selectedLyricIndices, onSelectedIndicesChange]
     );
 
     if (!song) return null;
@@ -174,7 +174,7 @@ export const ContentTab = React.memo(
         </div>
       </div>
     );
-  },
+  }
 );
 
 ContentTab.displayName = "ContentTab";

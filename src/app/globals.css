@@ -37,6 +37,7 @@
   --sidebar-accent-foreground: oklch(0.98 0.01 181);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+  --font-mono: var(--font-geist-mono);
 }
 
 .dark {
@@ -119,6 +120,6 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground selection:bg-primary/10 selection:text-primary;
   }
 }

@@ -27,7 +27,7 @@ import type { CardSettings, SongData } from "../types";
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"content" | "bg" | "style">(
-    "content",
+    "content"
   );
   const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +54,7 @@ const App: React.FC = () => {
     overlayGradientColor2: "rgba(0,0,0,0)",
     overlayGradientAngle: 0,
 
-    fontFamily: "Inter",
+    fontFamily: "Geist",
     fontSize: 28,
     textAlign: "left",
     textColor: "#ffffff",
@@ -93,7 +93,7 @@ const App: React.FC = () => {
           album: result.album ?? "Unknown Album",
           lyrics: lyricsArray,
           albumArtUrl: `https://picsum.photos/seed/${encodeURIComponent(
-            result.album ?? "Unknown Album",
+            result.album ?? "Unknown Album"
           )}/400/400`,
         });
         setLyricsText(result.lyrics);
@@ -102,7 +102,7 @@ const App: React.FC = () => {
       }
       setIsLoading(false);
     },
-    [query],
+    [query]
   );
 
   const handleManualCreate = useCallback(() => {
