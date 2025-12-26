@@ -26,6 +26,10 @@ export interface CardSettings {
   // Overlay
   overlayOpacity: number;
   overlayColor: string;
+  overlayType: "solid" | "gradient";
+  overlayGradientColor1: string;
+  overlayGradientColor2: string;
+  overlayGradientAngle: number;
 
   // Typography - General
   fontFamily: string;

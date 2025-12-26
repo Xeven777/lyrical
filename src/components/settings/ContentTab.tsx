@@ -1,9 +1,9 @@
-import React, { useMemo, useCallback } from "react";
+import { UploadSimpleIcon } from "@phosphor-icons/react/dist/ssr";
+import React, { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SongData } from "@/types";
-import { UploadSimpleIcon } from "@phosphor-icons/react/dist/ssr";
+import type { SongData } from "@/types";
 
 interface ContentTabProps {
   song: SongData | null;

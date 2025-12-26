@@ -1,10 +1,9 @@
 "use client";
 
+import { MoonIcon, SunIcon } from "@phosphor-icons/react/dist/ssr";
+import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { MoonIcon, SunIcon } from "@phosphor-icons/react/dist/ssr";
 
 export function ThemeProvider({
   children,

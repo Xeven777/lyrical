@@ -1,14 +1,14 @@
-import React, { useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { CardSettings } from "@/types";
-import { SliderInput } from "./SliderInput";
-import { ColorInput } from "./ColorInput";
 import {
   ArrowsClockwiseIcon,
   UploadSimpleIcon,
 } from "@phosphor-icons/react/dist/ssr";
+import React, { useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import type { CardSettings } from "@/types";
+import { ColorInput } from "./ColorInput";
+import { SliderInput } from "./SliderInput";
 
 interface BackgroundTabProps {
   settings: CardSettings;
