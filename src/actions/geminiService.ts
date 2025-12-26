@@ -1,7 +1,7 @@
 "use server";
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { GeminiLyricResponse } from "../types";
+import type { GeminiLyricResponse } from "../types";
 
 export const fetchSongDetails = async (
   query: string,
@@ -52,7 +52,7 @@ export const generateImagePrompt = async (songInfo: {
       contents: `Generate a short, vivid aesthetic image description for a background of a lyric card based on the song "${songInfo.title}" by "${songInfo.artist}". Focus on mood and style. Keep it under 50 words.`,
     });
     return response.text || `Abstract aesthetic mood for ${songInfo.title}`;
-  } catch (e) {
+  } catch (_e) {
     return `Aesthetic background for ${songInfo.title}`;
   }
 };

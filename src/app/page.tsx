@@ -1,17 +1,5 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from "react";
-import { SongData, CardSettings } from "../types";
-import * as htmlToImage from "html-to-image";
-import { fetchSongDetails } from "@/actions/geminiService";
-import { LyricCard } from "@/components/LyricCard";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ContentTab } from "@/components/settings/ContentTab";
-import { BackgroundTab } from "@/components/settings/BackgroundTab";
-import { StyleTab } from "@/components/settings/StyleTab";
 import {
   DownloadIcon,
   FilesIcon,
@@ -23,6 +11,19 @@ import {
   SparkleIcon,
   SpinnerIcon,
 } from "@phosphor-icons/react/dist/ssr";
+import * as htmlToImage from "html-to-image";
+import type React from "react";
+import { useCallback, useRef, useState } from "react";
+import { fetchSongDetails } from "@/actions/geminiService";
+import { LyricCard } from "@/components/LyricCard";
+import { BackgroundTab } from "@/components/settings/BackgroundTab";
+import { ContentTab } from "@/components/settings/ContentTab";
+import { StyleTab } from "@/components/settings/StyleTab";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { CardSettings, SongData } from "../types";
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"content" | "bg" | "style">(
@@ -48,6 +49,10 @@ const App: React.FC = () => {
 
     overlayOpacity: 0.6,
     overlayColor: "black",
+    overlayType: "gradient",
+    overlayGradientColor1: "rgba(0,0,0,0.8)",
+    overlayGradientColor2: "rgba(0,0,0,0)",
+    overlayGradientAngle: 0,
 
     fontFamily: "Inter",
     fontSize: 28,
@@ -131,7 +136,7 @@ const App: React.FC = () => {
         cacheBust: true,
         fontEmbedCSS: "",
         skipFonts: false,
-        filter: (node) => {
+        filter: (_node) => {
           // Filter out any problematic nodes if needed
           return true;
         },

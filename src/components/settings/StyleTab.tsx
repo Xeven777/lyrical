@@ -1,10 +1,3 @@
-import React, { useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { CardSettings, VerticalAlign } from "@/types";
-import { SliderInput } from "./SliderInput";
-import { ColorInput } from "./ColorInput";
 import {
   AlignBottomIcon,
   AlignCenterHorizontalSimpleIcon,
@@ -13,34 +6,21 @@ import {
   AlignRightIcon,
   AlignTopIcon,
 } from "@phosphor-icons/react/dist/ssr";
+import React, { useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import type { CardSettings, VerticalAlign } from "@/types";
+import { ColorInput } from "./ColorInput";
+import { SliderInput } from "./SliderInput";
 
 interface StyleTabProps {
   settings: CardSettings;
   onSettingsChange: (settings: CardSettings) => void;
 }
 
-const FONT_OPTIONS = [
-  "Inter",
-  "Montserrat",
-  "Poppins",
-  "Raleway",
-  "Playfair Display",
-  "Lora",
-  "Crimson Text",
-  "JetBrains Mono",
-  "Dancing Script",
-  "Caveat",
-];
-
 export const StyleTab = React.memo(
   ({ settings, onSettingsChange }: StyleTabProps) => {
-    const handleFontFamilyChange = useCallback(
-      (family: string) => {
-        onSettingsChange({ ...settings, fontFamily: family });
-      },
-      [settings, onSettingsChange],
-    );
-
     const handleFontSizeChange = useCallback(
       (size: number) => {
         onSettingsChange({ ...settings, fontSize: size });
@@ -111,26 +91,62 @@ export const StyleTab = React.memo(
       [settings, onSettingsChange],
     );
 
+    const handleBorderRadiusChange = useCallback(
+      (radius: number) => {
+        onSettingsChange({ ...settings, borderRadius: radius });
+      },
+      [settings, onSettingsChange],
+    );
+
+    const handleOverlayTypeChange = useCallback(
+      (type: "solid" | "gradient") => {
+        onSettingsChange({ ...settings, overlayType: type });
+      },
+      [settings, onSettingsChange],
+    );
+
+    const handleOverlayColorChange = useCallback(
+      (color: string) => {
+        onSettingsChange({ ...settings, overlayColor: color });
+      },
+      [settings, onSettingsChange],
+    );
+
+    const handleOverlayGradientColor1Change = useCallback(
+      (color: string) => {
+        onSettingsChange({ ...settings, overlayGradientColor1: color });
+      },
+      [settings, onSettingsChange],
+    );
+
+    const handleOverlayGradientColor2Change = useCallback(
+      (color: string) => {
+        onSettingsChange({ ...settings, overlayGradientColor2: color });
+      },
+      [settings, onSettingsChange],
+    );
+
+    const handleOverlayGradientAngleChange = useCallback(
+      (angle: number) => {
+        onSettingsChange({ ...settings, overlayGradientAngle: angle });
+      },
+      [settings, onSettingsChange],
+    );
+
+    const handleOverlayOpacityChange = useCallback(
+      (opacity: number) => {
+        onSettingsChange({ ...settings, overlayOpacity: opacity });
+      },
+      [settings, onSettingsChange],
+    );
+
     return (
       <div className="space-y-8">
         {/* Typography */}
         <div className="space-y-4">
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Typography Library
+            Typography
           </h3>
-          <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2">
-            {FONT_OPTIONS.map((f) => (
-              <Button
-                key={f}
-                variant={settings.fontFamily === f ? "default" : "outline"}
-                onClick={() => handleFontFamilyChange(f)}
-                className="text-xs text-left justify-start h-auto py-2"
-                style={{ fontFamily: `'${f}', sans-serif` }}
-              >
-                {f}
-              </Button>
-            ))}
-          </div>
           <div className="grid grid-cols-2 gap-4">
             <SliderInput
               label="Size"
@@ -218,6 +234,63 @@ export const StyleTab = React.memo(
 
         <Separator />
 
+        {/* Overlay */}
+        <div className="space-y-4">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            Overlay
+          </h3>
+          <div className="flex gap-2 bg-muted p-1 rounded-lg">
+            {(["solid", "gradient"] as const).map((t) => (
+              <Button
+                key={t}
+                variant={settings.overlayType === t ? "secondary" : "ghost"}
+                onClick={() => handleOverlayTypeChange(t)}
+                className="flex-1 capitalize"
+              >
+                {t}
+              </Button>
+            ))}
+          </div>
+          {settings.overlayType === "solid" ? (
+            <ColorInput
+              label="Color"
+              value={settings.overlayColor}
+              onChange={handleOverlayColorChange}
+            />
+          ) : (
+            <div className="grid grid-cols-2 gap-4">
+              <ColorInput
+                label="Color 1"
+                value={settings.overlayGradientColor1}
+                onChange={handleOverlayGradientColor1Change}
+              />
+              <ColorInput
+                label="Color 2"
+                value={settings.overlayGradientColor2}
+                onChange={handleOverlayGradientColor2Change}
+              />
+              <SliderInput
+                label="Angle"
+                value={settings.overlayGradientAngle}
+                onChange={handleOverlayGradientAngleChange}
+                min={0}
+                max={360}
+                step={1}
+              />
+            </div>
+          )}
+          <SliderInput
+            label="Opacity"
+            value={settings.overlayOpacity}
+            onChange={handleOverlayOpacityChange}
+            min={0}
+            max={1}
+            step={0.1}
+          />
+        </div>
+
+        <Separator />
+
         {/* Alignment & Layout */}
         <div className="space-y-4">
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -259,6 +332,14 @@ export const StyleTab = React.memo(
               </Button>
             ))}
           </div>
+          <SliderInput
+            label="Roundness"
+            value={settings.borderRadius}
+            onChange={handleBorderRadiusChange}
+            min={0}
+            max={64}
+            step={1}
+          />
         </div>
       </div>
     );
