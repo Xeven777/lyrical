@@ -97,12 +97,6 @@ Contributions are welcome! Feel free to open issues or PRs. A few ideas:
 
 ---
 
-## 📝 License
-
-This project is open-source — add a license as needed.
-
----
-
 If you find the project useful or have feature suggestions, please open an issue — I'd love to hear your ideas! 💡
 
 Happy lyric-ing! 🎶
