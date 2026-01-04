@@ -1,10 +1,10 @@
 "use server";
 
 import { GoogleGenAI, Type } from "@google/genai";
-import type { GeminiLyricResponse } from "../types";
+import type { GeminiLyricResponse } from "@/types";
 
 export const fetchSongDetails = async (
-  query: string,
+  query: string
 ): Promise<GeminiLyricResponse | null> => {
   "use cache";
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });

@@ -20,14 +20,14 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
             .map((i) => song.lyrics[i])
             .filter(Boolean)
         : ["I been an OG since I was younger", "Everything I do is elite"],
-    [song, settings.selectedLyricIndices],
+    [song, settings.selectedLyricIndices]
   );
 
   const artist = useMemo(() => song?.artist || "Artist Name", [song?.artist]);
   const title = useMemo(() => song?.title || "Song Title", [song?.title]);
   const albumArt = useMemo(
     () => song?.albumArtUrl || "https://picsum.photos/seed/music/400/400",
-    [song?.albumArtUrl],
+    [song?.albumArtUrl]
   );
 
   const getBackgroundStyle = useMemo(() => {
@@ -92,8 +92,8 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
         top: "justify-start",
         center: "justify-center",
         bottom: "justify-end",
-      })[settings.verticalAlign],
-    [settings.verticalAlign],
+      }[settings.verticalAlign]),
+    [settings.verticalAlign]
   );
 
   return (
@@ -101,7 +101,7 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
       ref={previewRef}
       className={cn(
         "relative w-full aspect-4/5 max-w-125 overflow-hidden shadow-2xl bg-card group select-none flex flex-col",
-        verticalAlignClass,
+        verticalAlignClass
       )}
       style={{
         borderRadius: `${settings.borderRadius}px`,
@@ -112,7 +112,7 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
         <div
           className={cn(
             "absolute inset-0 bg-cover bg-center transition-all duration-300",
-            settings.bgType === "image" && "scale-105",
+            settings.bgType === "image" && "scale-105"
           )}
           style={getBackgroundStyle}
         />
@@ -126,7 +126,7 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
             "w-6 h-6 rounded-full flex items-center justify-center backdrop-blur-sm",
             settings.overlayColor === "white"
               ? "bg-foreground/10"
-              : "bg-background/20",
+              : "bg-background/20"
           )}
         >
           <span
@@ -134,7 +134,7 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
               "text-xs font-bold",
               settings.overlayColor === "white"
                 ? "text-foreground"
-                : "text-background",
+                : "text-background"
             )}
           >
             L
@@ -145,17 +145,17 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
             "text-xs font-bold tracking-widest uppercase",
             settings.overlayColor === "white"
               ? "text-foreground/80"
-              : "text-background/80",
+              : "text-background/80"
           )}
         >
-          LyricVibe
+          LyricsVibe
         </span>
       </div>
 
       <div
         className={cn(
           "relative z-10 p-8 flex flex-col gap-6 w-full",
-          settings.verticalAlign === "top" && "pt-16",
+          settings.verticalAlign === "top" && "pt-16"
         )}
       >
         <div className="flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -199,8 +199,8 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
               settings.fontWeight === "extrabold"
                 ? 800
                 : settings.fontWeight === "bold"
-                  ? 700
-                  : 400,
+                ? 700
+                : 400,
             fontStyle: settings.fontStyle,
             letterSpacing: `${settings.letterSpacing}em`,
             lineHeight: settings.lineHeight,

@@ -123,3 +123,20 @@
     @apply bg-background text-foreground selection:bg-primary/10 selection:text-primary;
   }
 }
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-corner {
+  background: var(--background);
+}

@@ -6,6 +6,15 @@ export interface SongData {
   albumArtUrl?: string;
 }
 
+// Response shape returned by Gemini in `fetchSongDetails`
+export interface GeminiLyricResponse {
+  title: string;
+  artist: string;
+  album?: string;
+  /** Full lyrics as a single string (lines separated by `\n`) */
+  lyrics: string;
+}
+
 export type BgType = "image" | "color" | "gradient";
 export type VerticalAlign = "top" | "center" | "bottom";
 

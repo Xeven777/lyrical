@@ -39,6 +39,8 @@ const App: React.FC = () => {
   const [lyricsText, setLyricsText] = useState("");
 
   const [song, setSong] = useState<SongData | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [processingState, setProcessingState] = useState<string | null>(null);
   const [settings, setSettings] = useState<CardSettings>({
     bgType: "image",
     backgroundImage: null,
@@ -80,6 +82,7 @@ const App: React.FC = () => {
   });
 
   const previewRef = useRef<HTMLDivElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = setTimeout(async () => {
@@ -97,36 +100,84 @@ const App: React.FC = () => {
     };
   }, [query]);
 
+  // Close suggestions on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    if (showSuggestions) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [showSuggestions]);
+
   const handleSuggestionSelect = useCallback(
     async (suggestion: SongSuggestion) => {
-      setQuery(`${suggestion.artist.name} - ${suggestion.title}`);
-      setShowSuggestions(false);
-      setIsLoading(true);
+      try {
+        setQuery(`${suggestion.artist.name} - ${suggestion.title}`);
+        setShowSuggestions(false);
+        setIsLoading(true);
+        setProcessingState("Fetching lyrics...");
+        setErrorMessage(null);
 
-      const lyricsData = await fetchLyrics(
-        suggestion.artist.name,
-        suggestion.title
-      );
+        const lyricsData = await fetchLyrics(
+          suggestion.artist.name,
+          suggestion.title
+        );
 
-      if (lyricsData?.lyrics) {
-        const lyricsArray = lyricsData.lyrics
-          .split("\n")
-          .filter((line: string) => line.trim().length > 0);
-        setSong({
-          title: suggestion.title,
-          artist: suggestion.artist.name,
-          album: suggestion.album.title ?? "Unknown Album",
-          lyrics: lyricsArray,
-          albumArtUrl: suggestion.album.cover_big,
-        });
-        setLyricsText(lyricsData.lyrics);
-        setSettings((prev) => ({ ...prev, selectedLyricIndices: [] }));
-        setActiveTab("content");
-      } else {
-        handleManualCreate(suggestion.title, suggestion.artist.name);
+        if (lyricsData?.lyrics) {
+          setProcessingState("Processing lyrics...");
+          const lyricsArray = lyricsData.lyrics
+            .split("\n")
+            .filter((line: string) => line.trim().length > 0);
+          setSong({
+            title: suggestion.title,
+            artist: suggestion.artist.name,
+            album: suggestion.album.title ?? "Unknown Album",
+            lyrics: lyricsArray,
+            albumArtUrl: suggestion.album.cover_big,
+          });
+          setLyricsText(lyricsData.lyrics);
+          setSettings((prev) => ({ ...prev, selectedLyricIndices: [] }));
+          setActiveTab("content");
+          setProcessingState(null);
+        } else {
+          setProcessingState("Loading placeholder lyrics...");
+          const title = suggestion.title;
+          const artist = suggestion.artist.name;
+          const emptySong = {
+            title,
+            artist,
+            album: suggestion.album.title ?? "Unknown Album",
+            lyrics: [
+              "I was born to love you",
+              "With every single beat of my heart",
+            ],
+            albumArtUrl: suggestion.album.cover_big,
+          };
+          setSong(emptySong);
+          setLyricsText(emptySong.lyrics.join("\n"));
+          setSettings((prev) => ({ ...prev, selectedLyricIndices: [0, 1] }));
+          setActiveTab("content");
+          setProcessingState(null);
+        }
+
+        setIsLoading(false);
+      } catch (error) {
+        const errorMsg =
+          error instanceof Error ? error.message : "Failed to load song";
+        setErrorMessage(errorMsg);
+        setProcessingState(null);
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     },
     []
   );
@@ -161,7 +212,13 @@ const App: React.FC = () => {
   );
 
   const handleManualCreate = useCallback(
-    (title = "Song Title", artist = "Artist Name") => {
+    (
+      titleOrEvent: string | React.MouseEvent = "Song Title",
+      artist = "Artist Name"
+    ) => {
+      const title =
+        typeof titleOrEvent === "string" ? titleOrEvent : "Song Title";
+
       const emptySong = {
         title,
         artist,
@@ -206,7 +263,7 @@ const App: React.FC = () => {
         },
       });
       const link = document.createElement("a");
-      link.download = `LyricVibe-${song?.title || "Cover"}.png`;
+      link.download = `LyricsVibe-${song?.title || "Cover"}.png`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
@@ -220,7 +277,7 @@ const App: React.FC = () => {
           skipFonts: true,
         });
         const link = document.createElement("a");
-        link.download = `LyricVibe-${song?.title || "Cover"}.png`;
+        link.download = `LyricsVibe-${song?.title || "Cover"}.png`;
         link.href = dataUrl;
         link.click();
       } catch (fallbackErr) {
@@ -253,7 +310,7 @@ const App: React.FC = () => {
             />
           </div>
           <h1 className="text-2xl font-black tracking-tighter uppercase italic bg-clip-text text-transparent bg-linear-to-r from-foreground to-muted-foreground pr-2">
-            LyricVibe
+            LyricsVibe
           </h1>
         </div>
         <Button onClick={downloadImage} size="lg" className="shadow-lg">
@@ -264,7 +321,7 @@ const App: React.FC = () => {
 
       <main className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-7 flex flex-col gap-6 order-2 lg:order-1">
-          <Card className="p-4 flex gap-2 flex-row">
+          <Card className="p-4 flex gap-2 flex-row overflow-visible">
             <form onSubmit={handleSearch} className="flex-1 relative">
               <MusicNoteIcon
                 weight="fill"
@@ -279,27 +336,37 @@ const App: React.FC = () => {
                 autoComplete="off"
               />
               {showSuggestions && suggestions.length > 0 && (
-                <Card className="absolute top-full mt-2 w-full bg-background border-border rounded-lg shadow-lg z-50 p-2">
+                <div
+                  ref={suggestionsRef}
+                  className="absolute top-full mt-1 left-0 right-0 bg-background/20 backdrop-blur-2xl border border-border rounded-2xl shadow-xl z-50 max-h-96 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200"
+                >
                   {suggestions.map((s) => (
-                    <div
+                    <button
                       key={s.id}
                       onClick={() => handleSuggestionSelect(s)}
-                      className="p-2 hover:bg-muted rounded-md cursor-pointer flex items-center gap-3 text-left"
+                      className="w-full px-3 py-2 hover:bg-primary/5 transition-all flex items-center gap-3 text-left border-b border-border/50 last:border-b-0 hover:pl-4 group"
                     >
-                      <img
-                        src={s.album.cover_small}
-                        alt={s.album.title}
-                        className="w-10 h-10 rounded-sm"
-                      />
-                      <div className="min-w-0">
-                        <p className="font-bold truncate text-sm">{s.title}</p>
+                      <div className="shrink-0">
+                        <img
+                          src={s.album.cover_small}
+                          alt={s.album.title}
+                          className="w-12 h-12 rounded-md object-cover shadow-sm"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-sm truncate">
+                          {s.title}
+                        </p>
                         <p className="text-xs text-muted-foreground truncate">
                           {s.artist.name}
                         </p>
                       </div>
-                    </div>
+                      <div className="text-xs text-muted-foreground shrink-0">
+                        {s.album.title}
+                      </div>
+                    </button>
                   ))}
-                </Card>
+                </div>
               )}
             </form>
             <Button onClick={handleSearch} disabled={isLoading || !query}>
@@ -310,7 +377,31 @@ const App: React.FC = () => {
               )}
             </Button>
           </Card>
-
+          {errorMessage && (
+            <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 flex items-start gap-3 animate-in slide-in-from-top">
+              <div className="w-2 h-2 rounded-full bg-destructive mt-2 shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-destructive">Error</p>
+                <p className="text-xs text-destructive/80 mt-1">
+                  {errorMessage}
+                </p>
+              </div>
+              <button
+                onClick={() => setErrorMessage(null)}
+                className="text-destructive/60 hover:text-destructive text-lg"
+              >
+                ×
+              </button>
+            </div>
+          )}
+          {processingState && (
+            <div className="bg-primary/10 border border-primary/30 rounded-lg p-4 flex items-center gap-3 animate-in slide-in-from-top">
+              <SpinnerIcon className="size-4 text-primary animate-spin shrink-0" />
+              <p className="text-sm text-primary font-medium">
+                {processingState}
+              </p>
+            </div>
+          )}{" "}
           {!song ? (
             <Card className="border-dashed p-12 text-center flex flex-col items-center gap-4">
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">

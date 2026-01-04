@@ -21,7 +21,7 @@ export const BackgroundTab = React.memo(
       (bgType: "image" | "gradient" | "color") => {
         onSettingsChange({ ...settings, bgType });
       },
-      [settings, onSettingsChange],
+      [settings, onSettingsChange]
     );
 
     const handleBgUpload = useCallback(
@@ -39,7 +39,7 @@ export const BackgroundTab = React.memo(
           reader.readAsDataURL(file);
         }
       },
-      [settings, onSettingsChange],
+      [settings, onSettingsChange]
     );
 
     const handleRandomBackground = useCallback(() => {
@@ -53,53 +53,54 @@ export const BackgroundTab = React.memo(
       (bgBlur: number) => {
         onSettingsChange({ ...settings, bgBlur });
       },
-      [settings, onSettingsChange],
+      [settings, onSettingsChange]
     );
 
     const handleBrightnessChange = useCallback(
       (bgBrightness: number) => {
         onSettingsChange({ ...settings, bgBrightness });
       },
-      [settings, onSettingsChange],
+      [settings, onSettingsChange]
     );
 
     const handleGradientColor1Change = useCallback(
       (color: string) => {
         onSettingsChange({ ...settings, gradientColor1: color });
       },
-      [settings, onSettingsChange],
+      [settings, onSettingsChange]
     );
 
     const handleGradientColor2Change = useCallback(
       (color: string) => {
         onSettingsChange({ ...settings, gradientColor2: color });
       },
-      [settings, onSettingsChange],
+      [settings, onSettingsChange]
     );
 
     const handleGradientAngleChange = useCallback(
       (angle: number) => {
         onSettingsChange({ ...settings, gradientAngle: angle });
       },
-      [settings, onSettingsChange],
+      [settings, onSettingsChange]
     );
 
     const handleBgColorChange = useCallback(
       (color: string) => {
         onSettingsChange({ ...settings, backgroundColor: color });
       },
-      [settings, onSettingsChange],
+      [settings, onSettingsChange]
     );
 
     return (
-      <div className="space-y-8">
-        <div className="flex bg-muted p-1 rounded-xl">
+      <div className="space-y-5">
+        <div className="flex bg-muted/30 p-1 rounded-full">
           {(["image", "gradient", "color"] as const).map((t) => (
             <Button
               key={t}
               variant={settings.bgType === t ? "secondary" : "ghost"}
               onClick={() => handleBgTypeChange(t)}
               className="flex-1 text-xs font-bold uppercase"
+              size="sm"
             >
               {t}
             </Button>
@@ -107,11 +108,11 @@ export const BackgroundTab = React.memo(
         </div>
 
         {settings.bgType === "image" && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <Label className="h-24 border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-muted transition-colors">
-                <UploadSimpleIcon className="size-5 text-muted-foreground" />
-                <span className="text-xs mt-2">Upload</span>
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <Label className="h-20 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-muted transition-colors">
+                <UploadSimpleIcon className="size-4 text-muted-foreground" />
+                <span className="text-xs mt-1">Upload</span>
                 <input
                   type="file"
                   className="hidden"
@@ -123,14 +124,15 @@ export const BackgroundTab = React.memo(
               <Button
                 variant="outline"
                 onClick={handleRandomBackground}
-                className="h-24 flex flex-col items-center justify-center"
+                className="h-20 flex flex-col items-center justify-center"
+                size="sm"
               >
-                <ArrowsClockwiseIcon className="size-5" />
-                <span className="text-xs mt-2">Random</span>
+                <ArrowsClockwiseIcon className="size-4" />
+                <span className="text-xs mt-1">Random</span>
               </Button>
             </div>
             <Separator />
-            <div className="space-y-4">
+            <div className="space-y-3">
               <SliderInput
                 label="Blur"
                 value={settings.bgBlur}
@@ -154,8 +156,8 @@ export const BackgroundTab = React.memo(
         )}
 
         {settings.bgType === "gradient" && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
               <ColorInput
                 label="Color 1"
                 value={settings.gradientColor1}
@@ -188,7 +190,7 @@ export const BackgroundTab = React.memo(
         )}
       </div>
     );
-  },
+  }
 );
 
 BackgroundTab.displayName = "BackgroundTab";
