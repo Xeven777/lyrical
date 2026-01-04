@@ -1,4 +1,4 @@
-import { UploadSimpleIcon } from "@phosphor-icons/react/dist/ssr";
+import { ImageIcon, UploadSimpleIcon } from "@phosphor-icons/react/dist/ssr";
 import React, { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,13 +37,6 @@ export const ContentTab = React.memo(
     const handleArtistChange = useCallback(
       (artist: string) => {
         if (song) onSongChange({ ...song, artist });
-      },
-      [song, onSongChange]
-    );
-
-    const handleAlbumChange = useCallback(
-      (album: string) => {
-        if (song) onSongChange({ ...song, album });
       },
       [song, onSongChange]
     );
@@ -94,29 +87,40 @@ export const ContentTab = React.memo(
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Metadata Details
           </h3>
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              type="text"
-              value={song.title}
-              onChange={(e) => handleTitleChange(e.target.value)}
-              placeholder="Title"
-            />
-            <Input
-              type="text"
-              value={song.artist}
-              onChange={(e) => handleArtistChange(e.target.value)}
-              placeholder="Artist"
-            />
-            <div className="col-span-2 flex gap-2">
+          <div className="grid grid-cols-5 gap-4 items-center">
+            <div className="col-span-3 flex flex-col gap-4">
               <Input
                 type="text"
-                value={song.album}
-                onChange={(e) => handleAlbumChange(e.target.value)}
-                placeholder="Album"
-                className="flex-1"
+                value={song.title}
+                onChange={(e) => handleTitleChange(e.target.value)}
+                placeholder="Title"
               />
-              <Label className="bg-muted px-3 flex items-center rounded-lg cursor-pointer hover:bg-muted/80">
-                <UploadSimpleIcon className="size-4" />
+              <Input
+                type="text"
+                value={song.artist}
+                onChange={(e) => handleArtistChange(e.target.value)}
+                placeholder="Artist"
+              />
+            </div>
+            <div className="col-span-2">
+              <Label className="aspect-square bg-muted rounded-xl flex items-center justify-center cursor-pointer group overflow-hidden relative">
+                {song.albumArtUrl ? (
+                  <>
+                    <img
+                      src={song.albumArtUrl}
+                      alt="Album Art"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <UploadSimpleIcon className="size-6 text-white" />
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                    <ImageIcon className="size-6" />
+                    <span className="text-xs">Upload Art</span>
+                  </div>
+                )}
                 <input
                   type="file"
                   className="hidden"

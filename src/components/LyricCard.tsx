@@ -49,15 +49,41 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
   }, [settings]);
 
   const getOverlayStyle = useMemo(() => {
-    const style: React.CSSProperties = {
-      opacity: settings.overlayOpacity,
+    const {
+      overlayType,
+      overlayGradientAngle,
+      overlayColor,
+      overlayOpacityStart,
+      overlayOpacityEnd,
+    } = settings;
+
+    const rgba = (hex: string, alpha: number) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     };
-    if (settings.overlayType === "gradient") {
-      style.backgroundImage = `linear-gradient(${settings.overlayGradientAngle}deg, ${settings.overlayGradientColor1}, ${settings.overlayGradientColor2})`;
-    } else {
-      style.backgroundColor = settings.overlayColor;
+
+    if (overlayType === "gradient") {
+      const color1 =
+        settings.overlayGradientColor1.slice(0, 1) === "#"
+          ? rgba(settings.overlayGradientColor1, overlayOpacityStart)
+          : settings.overlayGradientColor1;
+
+      const color2 =
+        settings.overlayGradientColor2.slice(0, 1) === "#"
+          ? rgba(settings.overlayGradientColor2, overlayOpacityEnd)
+          : settings.overlayGradientColor2;
+
+      return {
+        backgroundImage: `linear-gradient(${overlayGradientAngle}deg, ${color1}, ${color2})`,
+      };
     }
-    return style;
+
+    return {
+      backgroundColor: overlayColor,
+      opacity: overlayOpacityStart,
+    };
   }, [settings]);
 
   const verticalAlignClass = useMemo(
