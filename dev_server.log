@@ -1,0 +1,27 @@
+$ next dev
+▲ Next.js 16.1.1 (Turbopack, Cache Components)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+
+✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+✓ Ready in 1066ms
+○ Compiling / ...
+ GET / 200 in 10.3s (compile: 9.5s, render: 747ms)
+ POST / 200 in 940ms (compile: 38ms, render: 903ms)
+ GET / 200 in 181ms (compile: 11ms, render: 170ms)
+ POST / 200 in 597ms (compile: 8ms, render: 588ms)
+ POST / 200 in 250ms (compile: 9ms, render: 241ms)
+ POST / 200 in 235ms (compile: 7ms, render: 227ms)
+ GET / 200 in 139ms (compile: 6ms, render: 133ms)
+ POST / 200 in 586ms (compile: 10ms, render: 577ms)
+ POST / 200 in 269ms (compile: 10ms, render: 259ms)
+ POST / 200 in 104ms (compile: 9ms, render: 95ms)
+ GET / 200 in 148ms (compile: 7ms, render: 142ms)
+ POST / 200 in 542ms (compile: 8ms, render: 535ms)
+ POST / 200 in 253ms (compile: 7ms, render: 245ms)
+ POST / 200 in 198ms (compile: 7ms, render: 191ms)

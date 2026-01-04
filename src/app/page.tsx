@@ -13,8 +13,9 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import * as htmlToImage from "html-to-image";
 import type React from "react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchSongDetails } from "@/actions/geminiService";
+import { fetchLyrics, fetchSongSuggestions } from "@/actions/lyricsService";
 import { LyricCard } from "@/components/LyricCard";
 import { BackgroundTab } from "@/components/settings/BackgroundTab";
 import { ContentTab } from "@/components/settings/ContentTab";
@@ -23,13 +24,15 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { CardSettings, SongData } from "../types";
+import type { CardSettings, SongData, SongSuggestion } from "../types";
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"content" | "bg" | "style">(
     "content"
   );
   const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<SongSuggestion[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const [isEditingLyrics, setIsEditingLyrics] = useState(false);
@@ -47,7 +50,8 @@ const App: React.FC = () => {
     bgBrightness: 100,
     bgGrayscale: 0,
 
-    overlayOpacity: 0.6,
+    overlayOpacityStart: 0.8,
+    overlayOpacityEnd: 0,
     overlayColor: "black",
     overlayType: "gradient",
     overlayGradientColor1: "rgba(0,0,0,0.8)",
@@ -77,11 +81,62 @@ const App: React.FC = () => {
 
   const previewRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const handler = setTimeout(async () => {
+      if (query.trim().length > 2) {
+        setShowSuggestions(true);
+        const fetchedSuggestions = await fetchSongSuggestions(query);
+        setSuggestions(fetchedSuggestions);
+      } else {
+        setShowSuggestions(false);
+      }
+    }, 300); // 300ms debounce
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [query]);
+
+  const handleSuggestionSelect = useCallback(
+    async (suggestion: SongSuggestion) => {
+      setQuery(`${suggestion.artist.name} - ${suggestion.title}`);
+      setShowSuggestions(false);
+      setIsLoading(true);
+
+      const lyricsData = await fetchLyrics(
+        suggestion.artist.name,
+        suggestion.title
+      );
+
+      if (lyricsData?.lyrics) {
+        const lyricsArray = lyricsData.lyrics
+          .split("\n")
+          .filter((line: string) => line.trim().length > 0);
+        setSong({
+          title: suggestion.title,
+          artist: suggestion.artist.name,
+          album: suggestion.album.title ?? "Unknown Album",
+          lyrics: lyricsArray,
+          albumArtUrl: suggestion.album.cover_big,
+        });
+        setLyricsText(lyricsData.lyrics);
+        setSettings((prev) => ({ ...prev, selectedLyricIndices: [] }));
+        setActiveTab("content");
+      } else {
+        handleManualCreate(suggestion.title, suggestion.artist.name);
+      }
+
+      setIsLoading(false);
+    },
+    []
+  );
+
   const handleSearch = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
       if (!query.trim()) return;
       setIsLoading(true);
+      setShowSuggestions(false);
       const result = await fetchSongDetails(query);
       if (result) {
         const lyricsArray = result.lyrics
@@ -105,19 +160,25 @@ const App: React.FC = () => {
     [query]
   );
 
-  const handleManualCreate = useCallback(() => {
-    const emptySong = {
-      title: "Song Title",
-      artist: "Artist Name",
-      album: "Album Name",
-      lyrics: ["I was born to love you", "With every single beat of my heart"],
-      albumArtUrl: "https://picsum.photos/seed/manual/400/400",
-    };
-    setSong(emptySong);
-    setLyricsText(emptySong.lyrics.join("\n"));
-    setSettings((prev) => ({ ...prev, selectedLyricIndices: [0, 1] }));
-    setActiveTab("content");
-  }, []);
+  const handleManualCreate = useCallback(
+    (title = "Song Title", artist = "Artist Name") => {
+      const emptySong = {
+        title,
+        artist,
+        album: "Album Name",
+        lyrics: [
+          "I was born to love you",
+          "With every single beat of my heart",
+        ],
+        albumArtUrl: "https://picsum.photos/seed/manual/400/400",
+      };
+      setSong(emptySong);
+      setLyricsText(emptySong.lyrics.join("\n"));
+      setSettings((prev) => ({ ...prev, selectedLyricIndices: [0, 1] }));
+      setActiveTab("content");
+    },
+    []
+  );
 
   const downloadImage = useCallback(async () => {
     if (previewRef.current === null) return;
@@ -215,7 +276,31 @@ const App: React.FC = () => {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="type Song, artist ..."
                 className="pl-10"
+                autoComplete="off"
               />
+              {showSuggestions && suggestions.length > 0 && (
+                <Card className="absolute top-full mt-2 w-full bg-background border-border rounded-lg shadow-lg z-50 p-2">
+                  {suggestions.map((s) => (
+                    <div
+                      key={s.id}
+                      onClick={() => handleSuggestionSelect(s)}
+                      className="p-2 hover:bg-muted rounded-md cursor-pointer flex items-center gap-3 text-left"
+                    >
+                      <img
+                        src={s.album.cover_small}
+                        alt={s.album.title}
+                        className="w-10 h-10 rounded-sm"
+                      />
+                      <div className="min-w-0">
+                        <p className="font-bold truncate text-sm">{s.title}</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {s.artist.name}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </Card>
+              )}
             </form>
             <Button onClick={handleSearch} disabled={isLoading || !query}>
               {isLoading ? (

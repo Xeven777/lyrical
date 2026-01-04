@@ -133,11 +133,18 @@ export const StyleTab = React.memo(
       [settings, onSettingsChange],
     );
 
-    const handleOverlayOpacityChange = useCallback(
+    const handleOverlayOpacityStartChange = useCallback(
       (opacity: number) => {
-        onSettingsChange({ ...settings, overlayOpacity: opacity });
+        onSettingsChange({ ...settings, overlayOpacityStart: opacity });
       },
-      [settings, onSettingsChange],
+      [settings, onSettingsChange]
+    );
+
+    const handleOverlayOpacityEndChange = useCallback(
+      (opacity: number) => {
+        onSettingsChange({ ...settings, overlayOpacityEnd: opacity });
+      },
+      [settings, onSettingsChange]
     );
 
     return (
@@ -280,12 +287,22 @@ export const StyleTab = React.memo(
             </div>
           )}
           <SliderInput
-            label="Opacity"
-            value={settings.overlayOpacity}
-            onChange={handleOverlayOpacityChange}
+            label="Opacity Start"
+            value={settings.overlayOpacityStart}
+            onChange={handleOverlayOpacityStartChange}
             min={0}
             max={1}
             step={0.1}
+            showValue
+          />
+          <SliderInput
+            label="Opacity End"
+            value={settings.overlayOpacityEnd}
+            onChange={handleOverlayOpacityEndChange}
+            min={0}
+            max={1}
+            step={0.1}
+            showValue
           />
         </div>
 
