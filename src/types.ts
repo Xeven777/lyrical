@@ -11,7 +11,6 @@ export interface GeminiLyricResponse {
   title: string;
   artist: string;
   album?: string;
-  /** Full lyrics as a single string (lines separated by `\n`) */
   lyrics: string;
 }
 

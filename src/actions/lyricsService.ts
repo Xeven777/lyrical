@@ -1,5 +1,3 @@
-"use server";
-
 import { GoogleGenAI } from "@google/genai";
 import type { LyricsResponse, SongSuggestion } from "@/types";
 

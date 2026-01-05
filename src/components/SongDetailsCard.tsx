@@ -3,7 +3,6 @@
 import {
   CalendarIcon,
   ClockIcon,
-  MusicNoteIcon,
   PauseIcon,
   PlayIcon,
   UserIcon,

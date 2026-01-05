@@ -108,8 +108,8 @@ export const ContentTab = React.memo(
                   <>
                     <img
                       src={song.albumArtUrl}
-                      alt="Album Art"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      alt={song.album + " Album Art"}
+                      className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <UploadSimpleIcon className="size-6 text-white" />
