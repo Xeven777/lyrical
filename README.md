@@ -84,7 +84,6 @@ Open http://localhost:3000 in your browser.
 - [x] Live preview + export to PNG
 - [ ] Add social share options (Twitter, Mastodon, etc.)
 - [ ] Add user presets & templates
-- [ ] Allow upload of custom background images
 - [ ] Add keyboard shortcuts for quick selection
 
 ---
@@ -93,12 +92,10 @@ Open http://localhost:3000 in your browser.
 
 Contributions are welcome! Feel free to open issues or PRs. A few ideas:
 
-- Improve Gemini prompts and error handling
-- Add more styling options or fonts
-- Add tests and CI
-
 ---
 
 If you find the project useful or have feature suggestions, please open an issue — I'd love to hear your ideas! 💡
 
 Happy lyric-ing! 🎶
+
+Made with ❤️ by Anish Athalye ([@Anish](https://x.com/xevenbiswas))
