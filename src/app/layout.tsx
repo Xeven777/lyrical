@@ -16,6 +16,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "LyricsVibe",
   description: "A minimal and beautiful lyrics viewer.",
+  openGraph: {
+    title: "LyricsVibe",
+    description: "A minimal and beautiful lyrics viewer.",
+    url: "https://lyricsvibe.netlify.app",
+    siteName: "LyricsVibe",
+    locale: "en_US",
+    type: "website",
+  },
+  metadataBase: new URL("https://lyricsvibe.netlify.app"),
 };
 
 export default function RootLayout({
