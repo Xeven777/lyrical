@@ -47,12 +47,12 @@ const App: React.FC = () => {
   const [settings, setSettings] = useState<CardSettings>({
     bgType: "image",
     backgroundImage: null,
-    backgroundColor: "#18181b",
+    backgroundColor: "#11c17e",
     gradientColor1: "#4f46e5",
-    gradientColor2: "#ec4899",
-    gradientAngle: 135,
-    bgBlur: 0,
-    bgBrightness: 100,
+    gradientColor2: "#18181b",
+    gradientAngle: 205,
+    bgBlur: 15,
+    bgBrightness: 120,
     bgGrayscale: 0,
 
     overlayOpacityStart: 0.8,
@@ -128,7 +128,7 @@ const App: React.FC = () => {
         setQuery(`${suggestion.artist.name} - ${suggestion.title}`);
         setShowSuggestions(false);
         setIsLoading(true);
-        setProcessingState("Fetching lyrics...");
+        setProcessingState("Searching for lyrics...");
         setErrorMessage(null);
         setSelectedSong(suggestion);
 
@@ -154,24 +154,13 @@ const App: React.FC = () => {
           setActiveTab("content");
           setProcessingState(null);
         } else {
-          setProcessingState("Loading placeholder lyrics...");
-          const title = suggestion.title;
-          const artist = suggestion.artist.name;
-          const emptySong = {
-            title,
-            artist,
-            album: suggestion.album.title ?? "Unknown Album",
-            lyrics: [
-              "I was born to love you",
-              "With every single beat of my heart",
-            ],
-            albumArtUrl: suggestion.album.cover_big,
-          };
-          setSong(emptySong);
-          setLyricsText(emptySong.lyrics.join("\n"));
-          setSettings((prev) => ({ ...prev, selectedLyricIndices: [0, 1] }));
-          setActiveTab("content");
+          // Lyrics could not be found from any source
+          setErrorMessage(
+            "Could not fetch lyrics for this song. Please try another or manually enter them."
+          );
           setProcessingState(null);
+          setIsLoading(false);
+          return;
         }
 
         setIsLoading(false);
@@ -346,7 +335,7 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 md:p-8 flex flex-col items-center">
+    <div className="text-foreground p-4 md:p-8 flex flex-col items-center">
       <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -395,7 +384,7 @@ const App: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, type: "spring", damping: 25 }}
           >
-            <Card className="p-4 flex gap-2 flex-row overflow-visible">
+            <Card className="p-4 flex gap-2 bg-card/30 flex-row overflow-visible">
               <form onSubmit={handleSearch} className="flex-1 relative">
                 <MusicNoteIcon
                   weight="fill"
@@ -406,13 +395,13 @@ const App: React.FC = () => {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="type Song, artist ..."
-                  className="pl-10"
+                  className="pl-10 bg-background/30"
                   autoComplete="off"
                 />
                 {showSuggestions && suggestions.length > 0 && (
                   <div
                     ref={suggestionsRef}
-                    className="absolute top-full mt-1 left-0 right-0 bg-background/40 backdrop-blur-2xl border border-border rounded-2xl shadow-xl z-50 max-h-96 overflow-y-auto"
+                    className="absolute no-scrollbar top-full mt-1 left-0 right-0 bg-background/40 backdrop-blur-2xl border border-border rounded-2xl shadow-xl max-h-96 overflow-y-auto z-50"
                   >
                     {suggestions.map((s) => (
                       <button
@@ -499,7 +488,7 @@ const App: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, type: "spring", damping: 25 }}
             >
-              <Card className="border-dashed p-12 text-center flex flex-col items-center gap-4">
+              <Card className="p-12 bg-card/30 text-center flex flex-col items-center gap-4">
                 <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
                   <SparkleIcon className="w-8 h-8 text-muted-foreground" />
                 </div>

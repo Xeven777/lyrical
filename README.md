@@ -1,5 +1,7 @@
 # LyricsVibe 🎵 — Lyrical cover card builder
 
+![ss](src/app/opengraph.webp)
+
 LyricsVibe (repo: **lyrical**) is a small Next.js app for creating beautiful lyric cards from songs. Search for songs, fetch or edit lyrics, customize the look (background, overlay, typography), and export a shareable PNG — all in the browser. ✨
 
 ---

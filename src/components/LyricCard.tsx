@@ -41,7 +41,7 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
     }
     const bgImage =
       settings.backgroundImage ||
-      "https://picsum.photos/seed/aesthetic/800/1200";
+      "https://plus.unsplash.com/premium_photo-1673198010333-3edb81ec7487?q=90&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
     return {
       backgroundImage: `url(${bgImage})`,
       filter: `blur(${settings.bgBlur}px) brightness(${settings.bgBrightness}%) grayscale(${settings.bgGrayscale}%)`,
@@ -100,12 +100,11 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
     <div
       ref={previewRef}
       className={cn(
-        "relative w-full aspect-4/5 max-w-125 overflow-hidden shadow-2xl bg-card group select-none flex flex-col",
+        "relative z-10 w-full aspect-4/5 max-w-125 overflow-hidden shadow-2xl bg-card group select-none flex flex-col",
         verticalAlignClass
       )}
       style={{
         borderRadius: `${settings.borderRadius}px`,
-        fontFamily: `'Inter', sans-serif`,
       }}
     >
       <div className="absolute inset-0 overflow-hidden">
@@ -137,7 +136,7 @@ const LyricCardComponent: React.FC<LyricCardProps> = ({
                 : "text-background"
             )}
           >
-            L
+            ♫
           </span>
         </div>
         <span

@@ -30,7 +30,7 @@ export function ModeToggle({ className }: { className?: string }) {
     <Button
       variant="outline"
       size="icon"
-      className={`rounded-full active:rotate-90 duration-700 transition-all ${className}`}
+      className={`rounded-full backdrop-blur-md active:rotate-90 duration-700 transition-all ${className}`}
       onClick={handleToggle}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
     >

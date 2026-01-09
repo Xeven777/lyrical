@@ -1,10 +1,19 @@
+"use server";
+
 import { GoogleGenAI, Type } from "@google/genai";
 import type { GeminiLyricResponse } from "@/types";
 
 export const fetchSongDetails = async (
   query: string
 ): Promise<GeminiLyricResponse | null> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+  const apiKey = process.env.API_KEY || process.env.NEXT_PUBLIC_API_KEY;
+
+  if (!apiKey) {
+    console.error("No API key found for Gemini");
+    return null;
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
 
   try {
     const response = await ai.models.generateContent({
@@ -42,7 +51,14 @@ export const generateImagePrompt = async (songInfo: {
   title: string;
   artist: string;
 }): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "" });
+  const apiKey = process.env.API_KEY || process.env.NEXT_PUBLIC_API_KEY;
+
+  if (!apiKey) {
+    console.error("No API key found for Gemini");
+    return `Aesthetic background for ${songInfo.title}`;
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",

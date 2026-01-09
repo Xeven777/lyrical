@@ -99,10 +99,7 @@ export function SongDetailsCard({ songData }: SongDetailsCardProps) {
           >
             <motion.div
               layout
-              className={cn(
-                "relative backdrop-blur-3xl bg-white/40 dark:bg-white/10 border border-white/30 shadow-2xl overflow-hidden",
-                "transition-all duration-300 ease-out"
-              )}
+              className="relative z-200 backdrop-blur-3xl bg-white/40 dark:bg-white/10 border border-white/30 shadow-2xl overflow-hidden transition-all duration-300 ease-out"
               style={{
                 borderRadius: isExpanded ? "24px" : "999px",
               }}
