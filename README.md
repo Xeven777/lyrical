@@ -98,4 +98,4 @@ If you find the project useful or have feature suggestions, please open an issue
 
 Happy lyric-ing! 🎶
 
-Made with ❤️ by Anish Athalye ([@Anish](https://x.com/xevenbiswas))
+Made with ❤️ by Anish Biswas ([@Anish](https://x.com/xevenbiswas))
